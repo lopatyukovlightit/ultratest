@@ -1,4 +1,3 @@
-
 export class ConfigService {
   public readonly envConfig: { [ key: string ]: string };
 
@@ -6,6 +5,11 @@ export class ConfigService {
     this.envConfig = process.env;
   }
 
+  /**
+   * Get param by key
+   * @param {string} key - param key
+   * @return {string}
+   */
   get(key: string): string {
     return this.envConfig[ key ];
   }

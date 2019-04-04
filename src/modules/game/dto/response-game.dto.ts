@@ -10,6 +10,8 @@ export class ResponseGameDto {
   @Type(() => Date)
   releaseDate: Date;
 
+  tags: string[];
+
   @Expose({
     name: 'publisher',
     toPlainOnly: true,

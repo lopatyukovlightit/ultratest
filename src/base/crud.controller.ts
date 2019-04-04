@@ -27,6 +27,11 @@ export abstract class CrudController<T extends EntityWithId, C = T, U = C, R = T
     private responseDto?: ClassType<any>) {
   }
 
+  /**
+   * Find all entities
+   * @param {object} params - search params
+   * @returns Promise<Type | ResponseDto>
+   */
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('')
   async getAll(@Query() params?: any): Promise<T[] | R[]> {
@@ -38,6 +43,11 @@ export abstract class CrudController<T extends EntityWithId, C = T, U = C, R = T
     return result;
   }
 
+  /**
+   * Find entity by UUID, throw 404 if not found
+   * @param {string} id - entity UUID
+   * @returns Promise<Type | ResponseDto>
+   */
   @UsePipes(new ParamUuidValidationPipe('id'))
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
@@ -50,6 +60,12 @@ export abstract class CrudController<T extends EntityWithId, C = T, U = C, R = T
     return result;
   }
 
+  /**
+   * Create entity with a given payload
+   * @param {Entity} data - entity data
+   * @param {boolean} skipValidation - flag for skip validation (default=false)
+   * @returns Promise<Type | ResponseDto>
+   */
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('')
   async create(@Body() data: C, skipValidation = false): Promise<T | R> {
@@ -62,6 +78,13 @@ export abstract class CrudController<T extends EntityWithId, C = T, U = C, R = T
     return result;
   }
 
+  /**
+   * Find entity by UUID and update it with a given payload, throw 404 if not found
+   * @param {string} id - entity UUID
+   * @param {boolean} skipValidation - flag for skip validation (default=false)
+   * @param {Entity} data - entity data
+   * @returns Promise<Type | ResponseDto>
+   */
   @UseInterceptors(ClassSerializerInterceptor)
   @UsePipes(new ParamUuidValidationPipe('id'))
   @Patch(':id')
@@ -75,6 +98,11 @@ export abstract class CrudController<T extends EntityWithId, C = T, U = C, R = T
     return result;
   }
 
+  /**
+   * Find a entity by UUID and delete it, throw 404 if not found
+   * @param {string} id - entity UUID
+   * @returns Promise<Type | ResponseDto>
+   */
   @UseInterceptors(ClassSerializerInterceptor)
   @UsePipes(new ParamUuidValidationPipe('id'))
   @Delete(':id')
@@ -87,6 +115,13 @@ export abstract class CrudController<T extends EntityWithId, C = T, U = C, R = T
     return result;
   }
 
+  /**
+   * Validate given payload and transform to Dto
+   * @param {any} data - payload
+   * @param {ClassType<any>} type - type (validate schema)
+   * @param {boolean} skipMissingProperties - skip missing properties during validating
+   * @returns Promise<Type | any>
+   */
   private validateAndTransform<K>(data: any, type: ClassType<any>, skipMissingProperties = false): K | T {
     const dataInDto = plainToClass(type, data) as unknown as K | T;
     const errors = validateSync(dataInDto, {

@@ -21,10 +21,19 @@ export class Game {
   @Column({ nullable: false, select: true })
   publisherId: string;
 
+  @Column('varchar', {
+    array: true,
+    length: 20,
+    nullable: true,
+  })
+  public tags: string[];
+
   @ManyToOne(() => Publisher, { nullable: false })
   publisher: Publisher;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   discountId: string;
 
   @ManyToOne(() => Discount, discount => discount.games, {

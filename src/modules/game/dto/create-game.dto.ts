@@ -1,4 +1,4 @@
-import { IsDateString, IsNumber, IsString, IsUUID } from 'class-validator';
+import { Allow, IsDateString, IsNumber, IsString, IsUUID, Length } from 'class-validator';
 
 export class CreateGameDto {
   @IsString()
@@ -12,4 +12,10 @@ export class CreateGameDto {
 
   @IsUUID()
   publisherId: string;
+
+  @Allow()
+  @Length(2, 20, {
+    each: true,
+  })
+  public tags: string[];
 }

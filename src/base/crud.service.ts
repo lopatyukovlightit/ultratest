@@ -16,12 +16,22 @@ export abstract class CrudService<T extends EntityWithId, C = T, U = C> extends 
     super(type, repository);
   }
 
+  /**
+   * Find all entities
+   * @param {object} params - search params
+   * @returns Promise<Type | ResponseDto>
+   */
   public async getAllEntities(params?: any): Promise<T[]> {
     params = params ? this.getOnlyAllowedSearchParams(params) : {};
     const findConditions: FindConditions<T> = params ? this.getOnlyAllowedSearchParams(params) : {};
     return await this.repository.find(findConditions);
   }
 
+  /**
+   * Find entity by UUID, throw 404 if not found
+   * @param {string} id - entity UUID
+   * @returns Promise<Type | ResponseDto>
+   */
   public async getEntityById(id: string): Promise<T> {
     const qb = this.getQueryBuilder();
     qb.where('entity.id = :id', { id });
@@ -32,6 +42,11 @@ export abstract class CrudService<T extends EntityWithId, C = T, U = C> extends 
     return entity;
   }
 
+  /**
+   * Create entity with a given payload
+   * @param {Entity} obj - entity data
+   * @returns Promise<Type | ResponseDto>
+   */
   public async createEntity(obj: C | T): Promise<T> {
     const data = classToPlain(obj);
     const entity = plainToClassFromExist(this.repository.create(), data) as unknown as T;
@@ -39,6 +54,12 @@ export abstract class CrudService<T extends EntityWithId, C = T, U = C> extends 
     return this.getEntityById(savedEntity.id);
   }
 
+  /**
+   * Find entity by UUID and update it with a given payload, throw 404 if not found
+   * @param {string} id - entity UUID
+   * @param {Entity} data - entity data
+   * @returns Promise<Type | ResponseDto>
+   */
   public async updateEntity(id: string, data: U | T): Promise<T> {
     await this.checkAnExistingEntityById(id);
     const existingEntity = await this.getEntityById(id);
@@ -47,6 +68,11 @@ export abstract class CrudService<T extends EntityWithId, C = T, U = C> extends 
     return await this.repository.save(entity);
   }
 
+  /**
+   * Find a entity by UUID and delete it, throw 404 if not found
+   * @param {string} id - entity UUID
+   * @returns Promise<Type | ResponseDto>
+   */
   public async deleteEntity(id: string): Promise<T> {
     await this.checkAnExistingEntityById(id);
     const entity = await this.getEntityById(id);
@@ -54,6 +80,10 @@ export abstract class CrudService<T extends EntityWithId, C = T, U = C> extends 
     return entity;
   }
 
+  /**
+   * Get query with selection and realtions options
+   * @returns SelectQueryBuilder<T>
+   */
   protected getQueryBuilder(): SelectQueryBuilder<T> {
     const qb = this.repository.createQueryBuilder('entity');
     if (this.options) {
@@ -73,7 +103,6 @@ export abstract class CrudService<T extends EntityWithId, C = T, U = C> extends 
         }
       }
     }
-
     return qb;
   }
 }
