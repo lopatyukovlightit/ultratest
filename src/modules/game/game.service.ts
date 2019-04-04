@@ -40,7 +40,6 @@ export class GameService extends CrudService<Game> {
     const discount = await this.discountService.getDiscountByName(DiscountNames.OLDGAME);
     const ago18months = moment().subtract(18, 'months').toDate();
     const ago12months = moment().subtract(12, 'months').toDate();
-    console.log(ago18months, ago12months);
     const obsolecentGames = await this.repository.find({
       releaseDate: Between(ago18months, ago12months),
       discountId: IsNull(),
