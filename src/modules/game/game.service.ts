@@ -24,7 +24,11 @@ export class GameService extends CrudService<Game> {
     super(Game, repository);
   }
 
-  async removeOtdated(): Promise<string[]> {
+  /**
+   * Deletes games that have the releaseDate older than 18 months
+   * @returns Promise<string[]> - removed games (ids)
+   */
+  async removeOutdated(): Promise<string[]> {
     const ago18months = moment().subtract(18, 'months').toDate();
     const outdatedGames = await this.repository.find({
       releaseDate: LessThanOrEqual(ago18months),
@@ -36,6 +40,10 @@ export class GameService extends CrudService<Game> {
     return outdatedGameIds;
   }
 
+  /**
+   * Adds the old game discount to games, that have the releaseDate between 18 and 12 months old
+   * @returns Promise<string[]> - updated games (ids)
+   */
   async setDiscountForObsolecent(): Promise<string[]> {
     const discount = await this.discountService.getDiscountByName(DiscountNames.OLDGAME);
     const ago18months = moment().subtract(18, 'months').toDate();
@@ -51,8 +59,13 @@ export class GameService extends CrudService<Game> {
     return obsolecentGameIds;
   }
 
+  /**
+   * Deletes games that have the releaseDate older than 18 months
+   * Adds the default discount to games, that have the releaseDate between 18 and 12 months old
+   * @returns Promise<ActualizeResponseDto>
+   */
   async actualize(): Promise<ActualizeResponseDto> {
-    const removedGameIds = await this.removeOtdated();
+    const removedGameIds = await this.removeOutdated();
     const updatedGameIds = await this.setDiscountForObsolecent();
     return {
       updatedGameIds,
@@ -60,6 +73,11 @@ export class GameService extends CrudService<Game> {
     };
   }
 
+  /**
+   * Find game by UUID and return its publisher, throw 404 if not found
+   * @param {string} id - game UUID
+   * @returns Promise<Publisher>
+   */
   async getPublisherByGameId(id: string): Promise<Publisher> {
     await this.checkAnExistingEntityById(id);
     const game = await this.repository.findOne(id, { relations: [ 'publisher' ] });
