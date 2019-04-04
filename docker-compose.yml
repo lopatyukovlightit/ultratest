@@ -1,0 +1,37 @@
+version: "3.5"
+
+services:
+  db:
+    build: ./database
+    volumes:
+      - ./database/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=ultratest_pass
+      - POSTGRES_DB=ultratest_db
+      - POSTGRES_USER=ultratest_user
+
+  backend:
+    build: .
+    links:
+      - db
+    depends_on:
+      - db
+    ports:
+      - "0.0.0.0:3000:3000"
+      - "0.0.0.0:9229:9229"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: [
+      "./wait-for-it.sh", "db:5432", "--timeout=0", "--",
+      "npm", "run", "start:dev"]
+    environment:
+      - PGSQL_HOST=db
+      - PGSQL_PORT=5432
+      - PGSQL_USER=ultratest_user
+      - PGSQL_USER_PASS=ultratest_pass
+      - PGSQL_DB_NAME=ultratest_db
+      - BACKEND_PORT=3000
+

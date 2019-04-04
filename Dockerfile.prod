@@ -1,0 +1,25 @@
+FROM node:9-alpine as dist
+WORKDIR /tmp/
+
+COPY package.json package-lock.json  ./
+RUN npm install
+
+COPY tsconfig.json ormconfig.ts tsconfig-paths-bootstrap.ts ./
+COPY src/ src/
+
+RUN npm run build
+
+FROM node:9-alpine as node_modules
+WORKDIR /tmp/
+COPY package.json package-lock.json ./
+RUN npm install --production
+
+FROM node:9-alpine
+RUN apk add --no-cache bash
+RUN mkdir -p /app
+WORKDIR /app
+COPY --from=node_modules /tmp/package.json ./
+COPY --from=node_modules /tmp/node_modules ./node_modules
+COPY --from=dist /tmp/dist ./dist
+COPY ./fixtures ./fixtures
+COPY ./wait-for-it.sh ./

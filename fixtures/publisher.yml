@@ -1,0 +1,7 @@
+entity: Publisher
+items:
+  publisher1:
+    id: 1f01261b-fa98-4090-835e-2c5e26e2d17d
+    name: Art
+    siret: 123
+    phone: +380661718714

@@ -1,0 +1,32 @@
+version: "3.5"
+
+services:
+  db:
+    build: ./database
+    volumes:
+      - ./database/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=ultratest_pass
+      - POSTGRES_DB=ultratest_db
+      - POSTGRES_USER=ultratest_user
+
+  backend:
+    build:
+      dockerfile: ./Dockerfile.prod
+      context: .
+    restart: always
+    links:
+      - db:${PGSQL_HOST}
+    depends_on:
+      - db
+    ports:
+      - "0.0.0.0:3003:3000"
+    command: ["./wait-for-it.sh", "db:5432", "--timeout=0", "--", "npm", "run", "start:prod"]
+    environment:
+      - PGSQL_HOST=db
+      - PGSQL_PORT=5432
+      - PGSQL_USER=ultratest_user
+      - PGSQL_USER_PASS=ultratest_pass
+      - PGSQL_DB_NAME=ultratest_db
+      - BACKEND_PORT=3000
+

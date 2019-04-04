@@ -1,0 +1,6 @@
+entity: Discount
+items:
+  discount:
+    id: 711ec041-a735-4c49-a2f5-6275c6b6d254
+    name: Oldgame
+    percent: 20
