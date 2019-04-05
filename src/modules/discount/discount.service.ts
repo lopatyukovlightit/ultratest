@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CrudService } from '@base/crud.service';
+import { CrudService } from '@base/services/crud.service';
 import { Discount } from '@entities/discount.entity';
 import { DatabaseToken } from '@core/database/database.providers';
 import { Repository } from 'typeorm';

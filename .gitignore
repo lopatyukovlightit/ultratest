@@ -2,4 +2,6 @@ node_modules
 .env
 dist
 database/data
+coverage
 .idea
+

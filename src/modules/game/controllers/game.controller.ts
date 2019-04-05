@@ -1,10 +1,10 @@
 import { ClassSerializerInterceptor, Controller, Get, Param, Post, UseInterceptors, UsePipes } from '@nestjs/common';
-import { CrudController } from '@base/crud.controller';
+import { CrudController } from '@base/controllers/crud.controller';
 import { Game } from '@entities/game.entity';
-import { GameService } from '@modules/game/game.service';
-import { CreateGameDto } from '@modules/game/dto/create-game.dto';
-import { ResponseGameDto } from '@modules/game/dto/response-game.dto';
-import { ActualizeResponseDto } from '@modules/game/dto/actualize-response.dto';
+import { GameService } from '../services/game.service';
+import { CreateGameDto } from '../dto/create-game.dto';
+import { ResponseGameDto } from '../dto/response-game.dto';
+import { ActualizeResponseDto } from '../dto/actualize-response.dto';
 import { Publisher } from '@entities/publisher.entity';
 import { ParamUuidValidationPipe } from '@core/pipes/param-uuid-validation.pipe';
 

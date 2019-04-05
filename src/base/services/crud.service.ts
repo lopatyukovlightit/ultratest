@@ -1,4 +1,4 @@
-import { IServiceOptions } from '@base/interfaces/service-options.interface';
+import { IServiceOptions } from '../interfaces/service-options.interface';
 import { NotFoundException, Type } from '@nestjs/common';
 import { classToPlain, plainToClassFromExist } from 'class-transformer';
 import { FindConditions, Repository, SelectQueryBuilder } from 'typeorm';

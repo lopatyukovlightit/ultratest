@@ -15,7 +15,7 @@ import {
 import { classToPlain, plainToClass } from 'class-transformer';
 import { ClassType } from 'class-transformer/ClassTransformer';
 import { validateSync } from 'class-validator';
-import { CrudService, EntityWithId } from './crud.service';
+import { CrudService, EntityWithId } from '../services/crud.service';
 
 export abstract class CrudController<T extends EntityWithId, C = T, U = C, R = T> {
 
@@ -68,7 +68,7 @@ export abstract class CrudController<T extends EntityWithId, C = T, U = C, R = T
    */
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('')
-  async create(@Body() data: C, skipValidation = false): Promise<T | R> {
+  async create(@Body() data: C | any, skipValidation = false): Promise<T | R> {
     const dataInDto = skipValidation ? data : this.validateAndTransform<C>(data, this.createDto || this.type);
     let result: T | R = await this.service.createEntity(dataInDto);
     if (this.responseDto) {
@@ -88,7 +88,7 @@ export abstract class CrudController<T extends EntityWithId, C = T, U = C, R = T
   @UseInterceptors(ClassSerializerInterceptor)
   @UsePipes(new ParamUuidValidationPipe('id'))
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() data: U, skipValidation = false): Promise<T | R> {
+  async update(@Param('id') id: string, @Body() data: U | any, skipValidation = false): Promise<T | R> {
     const dataInDto = skipValidation ? data : this.validateAndTransform<U>(data, this.updateDto || this.type, true);
     let result: T | R = await this.service.updateEntity(id, dataInDto);
     if (this.responseDto) {

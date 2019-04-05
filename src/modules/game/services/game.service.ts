@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CrudService } from '@base/crud.service';
+import { CrudService } from '@base/services/crud.service';
 import { Game } from '@entities/game.entity';
 import { DatabaseToken } from '@core/database/database.providers';
 import { Between, IsNull, LessThanOrEqual, Repository } from 'typeorm';
 import { IServiceOptions } from '@base/interfaces/service-options.interface';
-import { DiscountService } from '@modules/discount/discount.service';
-import { DiscountNames } from '@modules/discount/enums/discount-names.enum';
-import { ActualizeResponseDto } from '@modules/game/dto/actualize-response.dto';
+import { DiscountService } from '../../discount/discount.service';
+import { DiscountNames } from '../../discount/enums/discount-names.enum';
+import { ActualizeResponseDto } from '../dto/actualize-response.dto';
 import { Publisher } from '@entities/publisher.entity';
 import moment = require('moment');
 
